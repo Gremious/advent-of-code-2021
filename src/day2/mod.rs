@@ -6,6 +6,6 @@ pub mod part2;
 
 fn data() -> anyhow::Result<Vec<String>> {
     Ok(BufReader::new(File::open("./src/resources/2")?).lines()
-        .map(|x| x?)
+        .filter_map(|x| x.ok())
         .collect::<Vec<String>>())
 }

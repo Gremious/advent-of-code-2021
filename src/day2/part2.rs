@@ -5,7 +5,7 @@ pub fn run() -> anyhow::Result<u64> {
     let mut depth = 0;
     let mut aim = 0;
 
-    let lines = data();
+    let lines = data()?;
 
     for line in lines {
         let (command, value) = line.split_once(' ').unwrap();
