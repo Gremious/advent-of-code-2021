@@ -1,6 +1,7 @@
-pub fn run() -> anyhow::Result<u128> {
+pub fn run() -> anyhow::Result<u64> {
     let lines = super::data()?;
     let half_length = lines.len() as u64 / 2;
+
     let mut gamma_rate: [u8; 12] = Default::default();
 
     let bytes_vec: Vec<Vec<u8>> = lines.into_iter()
@@ -14,21 +15,14 @@ pub fn run() -> anyhow::Result<u128> {
             .map(|bytes| bytes[i] as u64).sum::<u64>()
         )
         .enumerate()
-        .for_each(|(i, x)| { if x > half_length { gamma_rate[i] = 1 } else { gamma_rate[i] = 0; } });
+        .for_each(|(i, x)| if x > half_length { gamma_rate[i] = 1 } else { gamma_rate[i] = 0; });
 
-    eprintln!("gamma_rate = {:?}", gamma_rate);
+    let epsilon_rate: String = gamma_rate.clone().into_iter().map(|x| ((x == 0) as u8).to_string()).collect();
+    let epsilon_rate = u64::from_str_radix(&epsilon_rate, 2)?;
 
-    let epsilon_rate: String = gamma_rate.clone().map(|x| ((x == 0) as u8).to_string()).into_iter().collect();
+    let gamma_rate: String = gamma_rate.into_iter().map(|x| x.to_string()).collect();
+    let gamma_rate = u64::from_str_radix(&gamma_rate, 2)?;
 
-    eprintln!("epsilon_rate = {:?}", epsilon_rate);
-
-    let epsilon_rate = u128::from_str_radix(&epsilon_rate, 2)?;
-    eprintln!("epsilon_rate = {:?}", epsilon_rate);
-
-    let gamma_rate: String = gamma_rate.clone().map(|x| x.to_string()).into_iter().collect();
-    let gamma_rate = u128::from_str_radix(&gamma_rate, 2)?;
-    eprintln!("gamma_rate = {:?}", gamma_rate);
-
+    assert_eq!(gamma_rate * epsilon_rate, 3923414);
     Ok(gamma_rate * epsilon_rate)
-    // Ok(0)
 }
